@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AdventOfCode2022::CalorieCounter
+	attr_reader :elves
+
 	class Elf
 		attr_reader :foods
 
@@ -17,8 +19,10 @@ class AdventOfCode2022::CalorieCounter
 		@elves = input_str_to_elves(str) 
 	end
 
-	def max_calories_carried
-		@elves.map { |e| e.total_calories }.max
+	def max_calories_carried(top_elves = 1)
+		cals = elves.sort { |e1, e2| e2.total_calories <=> e1.total_calories }
+			.map(&:total_calories)
+		cals[0...top_elves].sum
 	end
 
 	private
