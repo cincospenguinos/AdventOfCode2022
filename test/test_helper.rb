@@ -6,5 +6,5 @@ require "AdventOfCode2022"
 require "minitest/autorun"
 
 def test_input_for(day)
-	File.read("test/test_data/day_#{1}.txt")
+	File.read("test/test_data/day_#{day}.txt")
 end
