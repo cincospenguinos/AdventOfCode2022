@@ -11,10 +11,22 @@ class AdventOfCode2022::RockPaperScissors
       'Z' => :scissors,
     }
 
+    OUTCOMES = {
+      'X' => :lose,
+      'Y' => :draw,
+      'Z' => :win,
+    }
+
     RPS_WINNERS = {
       rock: :scissors,
       paper: :rock,
       scissors: :paper,
+    }
+
+    RPS_LOSERS = {
+      rock: :paper,
+      paper: :scissors,
+      scissors: :rock,
     }
 
     RPS_POINTS = {
@@ -24,16 +36,25 @@ class AdventOfCode2022::RockPaperScissors
     }
 
     attr_reader   :opponent_play
+    attr_reader   :outcome
     attr_accessor :my_play
 
     def initialize(str)
       split = str.split(/\s+/)
       @opponent_play = RPS_MAPPINGS[split[0]]
       @my_play = RPS_MAPPINGS[split[1]]
+      @outcome = OUTCOMES[split[1]]
     end
 
     def points
       RPS_POINTS[my_play] + outcome_points
+    end
+
+    def adjust_play_to_match_outcome
+      @my_play = opponent_play if outcome == :draw
+      @my_play = RPS_WINNERS[opponent_play] if outcome == :lose
+      @my_play = RPS_LOSERS[opponent_play] if outcome == :win
+      self
     end
 
     private
@@ -53,5 +74,9 @@ class AdventOfCode2022::RockPaperScissors
 
   def direct_strategy
     rounds.map { |r| r.points }.sum
+  end
+
+  def correct_strategy
+    rounds.map { |r| r.adjust_play_to_match_outcome.points }.sum
   end
 end
